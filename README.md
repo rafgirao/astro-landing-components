@@ -8,6 +8,30 @@ Reusable Astro components for creating beautiful landing pages and minicourse pa
 npm install @rgiraon/astro-landing-components
 ```
 
+**That's it!** Tailwind CSS is included as a dependency, so you don't need to install it separately.
+
+## Setup
+
+1. **Copy the Tailwind config** to your project root:
+```bash
+cp node_modules/@rgiraon/astro-landing-components/examples/tailwind.config.example.js tailwind.config.js
+```
+
+2. **Add Tailwind to your Astro config** (`astro.config.mjs`):
+```javascript
+import { defineConfig } from 'astro/config';
+import tailwind from '@astrojs/tailwind';
+
+export default defineConfig({
+  integrations: [tailwind()],
+});
+```
+
+3. **Install the Astro Tailwind integration**:
+```bash
+npm install @astrojs/tailwind
+```
+
 ## Quick Start
 
 1. Install the package in your Astro project
@@ -32,7 +56,6 @@ import type { TestimonialItem } from '@rgiraon/astro-landing-components';
 ## Requirements
 
 - **Astro 4.0+**
-- **Tailwind CSS** (components use Tailwind classes)
 
 ## Available Components
 
@@ -137,10 +160,6 @@ const faqItems = [
 ## Styling
 
 The components come with built-in **Tailwind CSS** classes. Make sure your Astro project has Tailwind CSS configured:
-
-```bash
-npx astro add tailwind
-```
 
 ## Complete Example
 
