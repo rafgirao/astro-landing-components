@@ -1,0 +1,98 @@
+---
+// Button component inspired by shadcn/ui style
+interface Props {
+  variant?:
+    | 'default'
+    | 'primary'
+    | 'secondary'
+    | 'accent'
+    | 'outline'
+    | 'ghost'
+    | 'link'
+  size?: 'sm' | 'default' | 'lg'
+  rounded?: boolean | 'full' // Adiciona opção de arredondamento
+  width?: 'auto' | 'full' // Controla a largura do botão
+  class?: string
+  as?: string // Tipo de elemento a ser renderizado (a, button, etc)
+  href?: string // URL para links
+  [x: string]: any
+}
+
+const {
+  variant = 'default',
+  size = 'default',
+  rounded = false,
+  width = 'auto',
+  class: className = '',
+  as: Element = 'button',
+  href,
+  ...rest
+} = Astro.props
+
+// Base styles
+const baseStyles =
+  'inline-flex items-center justify-center text-center font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none w-full md:w-auto'
+
+// Rounded styles
+const roundedStyles: Record<string, string> = {
+  false: 'rounded-md',
+  true: 'rounded-xl',
+  full: 'rounded-full',
+}
+
+// Size styles
+const sizeStyles = {
+  sm: 'h-10 px-4 py-4 text-xs',
+  default: 'h-11 py-6 px-6',
+  lg: 'h-12 py-8 px-10 text-base',
+}
+
+// Variant styles
+const variantStyles = {
+  default:
+    'bg-primary text-white hover:bg-primary/90 focus-visible:ring-primary',
+  primary:
+    'bg-primary text-white hover:bg-secondary focus-visible:ring-primary',
+  secondary:
+    'bg-secondary text-white hover:bg-primary focus-visible:ring-secondary',
+  accent: 'bg-accent text-white hover:bg-highlight focus-visible:ring-accent',
+  outline:
+    'border border-primary bg-transparent hover:bg-primary/10 text-primary',
+  ghost: 'hover:bg-primary/10 text-primary hover:text-primary',
+  link: 'text-primary underline-offset-4 hover:underline',
+}
+
+// Garantir que as chaves existem nos objetos de estilo
+const safeSize = size as keyof typeof sizeStyles
+const safeVariant = variant as keyof typeof variantStyles
+const safeRounded = (
+  rounded ? (rounded === true ? 'true' : rounded.toString()) : 'false'
+) as keyof typeof roundedStyles
+
+// Width styles
+const widthStyles = {
+  auto: 'md:w-auto',
+  full: 'w-full',
+}
+
+const classes = [
+  baseStyles,
+  sizeStyles[safeSize] || sizeStyles.default,
+  variantStyles[safeVariant] || variantStyles.default,
+  roundedStyles[safeRounded] || roundedStyles.false,
+  width === 'full' ? widthStyles.full : '',
+  className,
+].join(' ')
+---
+
+{
+  Element === 'a' ? (
+    <a class={classes} href={href} {...rest}>
+      <slot />
+    </a>
+  ) : (
+    <button class={classes} {...rest}>
+      <slot />
+    </button>
+  )
+}

@@ -1,0 +1,33 @@
+---
+// Separator component in shadcn style
+interface Props {
+  orientation?: 'horizontal' | 'vertical';
+  decorative?: boolean;
+  class?: string;
+  [x: string]: any;
+}
+
+const {
+  orientation = 'horizontal',
+  decorative = true,
+  class: className = '',
+  ...rest
+} = Astro.props;
+
+const orientationStyles = {
+  horizontal: 'h-px w-full',
+  vertical: 'h-full w-px'
+};
+
+const classes = [
+  'shrink-0 bg-gray-200',
+  orientationStyles[orientation],
+  className
+].join(' ');
+
+const ariaAttributes = decorative
+  ? { 'role': 'none' }
+  : { 'role': 'separator', 'aria-orientation': orientation };
+---
+
+<div class={classes} {...ariaAttributes} {...rest}></div>

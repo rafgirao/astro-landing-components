@@ -1,0 +1,38 @@
+---
+// Card component in shadcn style
+interface Props {
+  class?: string;
+  background?: string;
+  [x: string]: any;
+}
+
+const { class: className = '', background = 'bg-white', ...rest } = Astro.props;
+---
+
+<div class={`border ${background} shadow-sm ${className}`} {...rest}>
+  <slot />
+</div>
+
+<!-- Export subcomponents for Card -->
+<style is:global>
+  /* These classes will be available for use with Card */
+  .card-header {
+    @apply flex flex-col space-y-1.5 p-6;
+  }
+  
+  .card-title {
+    @apply text-2xl font-semibold leading-none tracking-tight;
+  }
+  
+  .card-description {
+    @apply text-sm text-gray-500;
+  }
+  
+  .card-content {
+    @apply p-6 pt-0;
+  }
+  
+  .card-footer {
+    @apply flex items-center p-6 pt-0;
+  }
+</style>

@@ -1,0 +1,35 @@
+---
+import { Image } from 'astro:assets';
+
+// Tipo para aceitar imagens importadas
+type ImageType = any;
+
+interface Props {
+  src: ImageType;
+  alt?: string;
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'full';
+  class?: string;
+}
+
+const { src, alt = "Imagem", size = 'full', class: customClass = '' } = Astro.props;
+
+// Definir classes de tamanho
+const sizeClasses = {
+  xs: 'max-w-xs mx-auto', // 320px
+  sm: 'max-w-sm mx-auto', // 384px
+  md: 'max-w-2xl mx-auto', // 672px
+  lg: 'max-w-4xl mx-auto', // 896px
+  xl: 'max-w-5xl mx-auto', // 1024px
+  full: 'w-full' // 100% da largura disponível
+};
+---
+
+<div class={customClass ? customClass : sizeClasses[size]}>
+  <Image
+    src={src}
+    alt={alt}
+    class="w-full h-auto rounded-lg shadow-lg"
+    width={1200}
+    height={800}
+  />
+</div>

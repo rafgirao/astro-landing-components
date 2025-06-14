@@ -1,0 +1,99 @@
+---
+// Accordion component que suporta conteúdo HTML para lições/aulas
+interface Props {
+  items: {
+    title: string;
+    content: string;
+  }[];
+  class?: string;
+}
+
+const { items, class: className = '' } = Astro.props;
+const uniqueId = `accordion-${Math.random().toString(36).substring(2, 9)}`;
+---
+
+<div class={`w-full ${className}`}>
+  {items.map((item, index) => (
+    <div class="border-b">
+      <button
+        id={`${uniqueId}-header-${index}`}
+        class="flex w-full justify-between items-center py-4 px-5 text-left font-medium transition-all hover:text-primary"
+        aria-expanded="false"
+        aria-controls={`${uniqueId}-content-${index}`}
+        data-accordion-toggle
+        data-target={`${uniqueId}-content-${index}`}
+      >
+        <span>{item.title}</span>
+        <svg 
+          xmlns="http://www.w3.org/2000/svg" 
+          width="24" 
+          height="24" 
+          viewBox="0 0 24 24" 
+          fill="none" 
+          stroke="currentColor" 
+          stroke-width="2" 
+          stroke-linecap="round" 
+          stroke-linejoin="round" 
+          class="h-4 w-4 transition-transform"
+        >
+          <path d="m6 9 6 6 6-6"></path>
+        </svg>
+      </button>
+      <div
+        id={`${uniqueId}-content-${index}`}
+        class="max-h-0 overflow-hidden transition-all duration-300"
+        aria-labelledby={`${uniqueId}-header-${index}`}
+        hidden
+      >
+        <div class="pb-4 px-5 pt-0" set:html={item.content}>
+          <!-- O conteúdo HTML será inserido aqui -->
+        </div>
+      </div>
+    </div>
+  ))}
+</div>
+
+<script>
+  // Initialize accordions
+  document.addEventListener('DOMContentLoaded', () => {
+    const toggleButtons = document.querySelectorAll('[data-accordion-toggle]');
+    
+    toggleButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const targetId = button.getAttribute('data-target');
+        if (!targetId) return;
+        
+        const target = document.getElementById(targetId);
+        if (!target) return;
+        
+        const isExpanded = button.getAttribute('aria-expanded') === 'true';
+        
+        // Toggle aria-expanded
+        button.setAttribute('aria-expanded', isExpanded ? 'false' : 'true');
+        
+        // Toggle icon rotation
+        const icon = button.querySelector('svg');
+        if (icon) {
+          if (isExpanded) {
+            icon.classList.remove('rotate-180');
+          } else {
+            icon.classList.add('rotate-180');
+          }
+        }
+        
+        // Toggle content visibility
+        if (isExpanded) {
+          target.style.maxHeight = '0';
+          setTimeout(() => {
+            target.setAttribute('hidden', '');
+          }, 300);
+        } else {
+          target.removeAttribute('hidden');
+          requestAnimationFrame(() => {
+            target.style.maxHeight = `${target.scrollHeight}px`;
+          });
+        }
+      });
+    });
+  });
+</script>

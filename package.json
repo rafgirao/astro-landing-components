@@ -1,0 +1,50 @@
+{
+  "name": "@conteudouau/astro-landing-components",
+  "version": "1.0.0",
+  "description": "Reusable Astro components for landing pages and minicourses",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./components/*": "./dist/components/*",
+    "./styles/*": "./dist/styles/*"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsup && npm run copy-files",
+    "copy-files": "cp -r src/components dist/ && cp -r src/assets dist/",
+    "dev": "tsup --watch",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "astro",
+    "components",
+    "landing-page",
+    "ui",
+    "typescript"
+  ],
+  "author": "ConteudoUAU",
+  "license": "MIT",
+  "peerDependencies": {
+    "astro": "^4.0.0"
+  },
+  "devDependencies": {
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/conteudouau/astro-landing-components.git"
+  },
+  "homepage": "https://github.com/conteudouau/astro-landing-components#readme",
+  "bugs": {
+    "url": "https://github.com/conteudouau/astro-landing-components/issues"
+  }
+}

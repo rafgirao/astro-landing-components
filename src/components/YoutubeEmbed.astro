@@ -1,0 +1,38 @@
+---
+interface Props {
+  videoId: string
+  title?: string
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'full'
+  class?: string
+}
+
+const {
+  videoId,
+  title = 'Vídeo do YouTube',
+  size = 'full',
+  class: customClass = '',
+} = Astro.props
+
+// Definir classes de tamanho
+const sizeClasses = {
+  xs: 'max-w-xs mx-auto', // 320px
+  sm: 'max-w-sm mx-auto', // 384px
+  md: 'max-w-2xl mx-auto', // 672px
+  lg: 'max-w-4xl mx-auto', // 896px
+  xl: 'max-w-5xl mx-auto', // 1024px
+  full: 'w-full', // 100% da largura disponível
+}
+---
+
+<div class={customClass ? customClass : sizeClasses[size]}>
+  <div style="padding-top: 56.25%; position: relative;">
+    <iframe
+      src={`https://www.youtube.com/embed/${videoId}`}
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+      allowfullscreen
+      style="position:absolute;top:0;left:0;width:100%;height:100%;"
+      title={title}
+      class="rounded-lg shadow-lg"></iframe>
+  </div>
+</div>

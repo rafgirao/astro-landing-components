@@ -1,0 +1,51 @@
+---
+import '../styles/video-embed.css'
+
+interface Props {
+  videoId: string
+  title?: string
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'full'
+  class?: string
+  orientation?: 'landscape' | 'portrait' | 'auto'
+}
+
+const {
+  videoId,
+  title = 'Vídeo do Panda',
+  size = 'full',
+  class: customClass = '',
+  orientation = 'auto',
+} = Astro.props
+
+// Definir classes de tamanho
+const sizeClasses = {
+  xs: 'max-w-xs mx-auto', // 320px
+  sm: 'max-w-sm mx-auto', // 384px
+  md: 'max-w-2xl mx-auto', // 672px
+  lg: 'max-w-4xl mx-auto', // 896px
+  xl: 'max-w-5xl mx-auto', // 1024px
+  full: 'w-full', // 100% da largura disponível
+}
+---
+
+<div class={customClass ? customClass : sizeClasses[size]}>
+  <div
+    class="panda-embed-container"
+    data-orientation={orientation}
+    data-video-id={videoId}
+  >
+    <iframe
+      id={`panda-${videoId}`}
+      src={`https://player-vz-9f1407b9-3a0.tv.pandavideo.com.br/embed/?v=${videoId}`}
+      style="position:absolute;top:0;left:0;width:100%;height:100%;border:none;"
+      allow="accelerometer;gyroscope;autoplay;encrypted-media;picture-in-picture"
+      allowfullscreen="true"
+      fetchpriority="high"
+      title={title}
+      class="rounded-lg shadow-lg"
+      onload="this.parentNode.dataset.loaded='true'"></iframe>
+  </div>
+</div>
+
+<!-- Script para detectar automaticamente a orientação do vídeo -->
+<script src="../scripts/video-embed.js"></script>

@@ -1,0 +1,241 @@
+---
+import { Image } from 'astro:assets';
+
+// Define um tipo para imagens importadas
+type ImageType = any;
+
+interface ShowcaseItem {
+  title: string
+  description?: string
+  imageUrl: ImageType
+  link?: string
+}
+
+interface Props {
+  // Título da seção
+  sectionTitle?: string
+  sectionSubtitle?: string
+
+  // Items do showcase
+  items: ShowcaseItem[]
+
+  // Cores e estilos (opcionais com valores padrão)
+  bgColor?: string
+  sectionPadding?: string
+  containerMaxWidth?: string
+
+  // Estilos do título
+  titleClass?: string
+  titleColor?: string
+  subtitleClass?: string
+  subtitleColor?: string
+
+  // Variação do layout
+  variant?: 'portrait' | 'landscape'
+  
+  // Background e gradientes
+  useGradient?: boolean
+  backgroundImageUrl?: ImageType
+  backgroundOverlayOpacity?: string
+  backgroundVideo?: string
+}
+
+const {
+  // Título da seção
+  sectionTitle = 'Showcase',
+  sectionSubtitle = 'Conheça nossos tutoriais em destaque',
+
+  // Items
+  items = [],
+
+  // Cores e estilos da seção
+  bgColor = 'bg-gray-900',
+  sectionPadding = 'py-24',
+  containerMaxWidth = 'max-w-7xl',
+
+  // Estilos do título
+  titleClass = 'text-3xl md:text-4xl font-bold mb-4',
+  titleColor = 'text-white',
+  subtitleClass = 'text-xl md:text-2xl',
+  subtitleColor = 'text-gray-300',
+
+  // Variação do layout
+  variant = 'landscape',
+  
+  // Background e gradientes
+  useGradient = false,
+  backgroundImageUrl = '',
+  backgroundOverlayOpacity = '50',
+  backgroundVideo = ''
+} = Astro.props
+
+// Determinar aspect ratio com base na variante
+const aspectRatio = variant === 'portrait' ? 'aspect-[3/4]' : 'aspect-[16/9]'
+---
+
+<section
+  class={`${sectionPadding} relative isolate overflow-hidden text-white`}
+  style={backgroundImageUrl
+    ? `background-image: url(${backgroundImageUrl}); background-size: cover; background-position: center;`
+    : ''}
+>
+  {/* Gradientes decorativos idênticos ao Hero */}
+  {useGradient && (
+    <>
+      <div class="pointer-events-none absolute -top-32 -left-32 w-[36rem] h-[36rem] bg-gradient-to-br from-primary/30 to-accent/10 rounded-full blur-3xl opacity-60 z-0"></div>
+      <div class="pointer-events-none absolute -bottom-32 right-0 w-[28rem] h-[28rem] bg-gradient-to-tr from-accent/40 via-primary/20 to-white rounded-full blur-2xl opacity-50 z-0"></div>
+    </>
+  )}
+  
+  {/* Fundo estilizado para a seção inteira quando não tem gradiente */}
+  {!useGradient && !backgroundImageUrl && (
+    <div
+      class="absolute inset-0 -z-10 bg-[radial-gradient(45rem_50rem_at_top,theme(colors.gray.800),theme(colors.gray.950))] opacity-30"
+    >
+    </div>
+  )}
+
+  {/* Overlay escuro para quando tem imagem de fundo */}
+  {backgroundImageUrl && (
+    <div
+      class="absolute inset-0 z-0 bg-black"
+      style={`opacity: ${parseInt(backgroundOverlayOpacity) / 100}`}
+    />
+  )}
+
+  {/* Fundo colorido quando não tem imagem */}
+  {!backgroundImageUrl && <div class={`absolute inset-0 z-0 ${bgColor}`} />}
+
+  {/* Vídeo de fundo */}
+  {backgroundVideo && (
+    <div class="absolute inset-0 z-0">
+      <video
+        autoplay
+        muted
+        loop
+        playsinline
+        class="w-full h-full object-cover"
+      >
+        <source src={backgroundVideo} type="video/mp4" />
+      </video>
+      <div class="absolute inset-0 bg-black bg-opacity-50" />
+    </div>
+  )}
+
+  {/* Imagem de fundo */}
+  {backgroundImageUrl && (
+    <div class="absolute inset-0 w-full h-full z-0">
+      <Image
+        src={backgroundImageUrl}
+        alt="Background"
+        class="w-full h-full object-cover object-center"
+        loading="lazy"
+      />
+      <div class="absolute inset-0 bg-black" style={`opacity: ${Number(backgroundOverlayOpacity) / 100}`}></div>
+    </div>
+  )}
+
+  <div class={`container mx-auto px-4 ${containerMaxWidth} relative z-10`}>
+    <!-- Cabeçalho da seção -->
+    <div class="text-center mb-12">
+      <h2 class="text-3xl md:text-3xl lg:text-4xl font-bold text-white mb-4">{sectionTitle}</h2>
+      {
+        sectionSubtitle && (
+          <div class="text-base md:text-lg text-white/90 leading-relaxed mb-6" set:html={sectionSubtitle} />
+        )
+      }
+    </div>
+
+    <!-- Showcase Carousel -->
+    <div id="showcase-slider" class="showcase-carousel relative overflow-hidden carousel">
+      <!-- Cards Container -->
+      <div id="showcase-cards-container" class="flex transition-transform duration-500 carousel-cards">
+          {items.map((item, index) => (
+            <div 
+              class={`showcase-card ${aspectRatio} flex-shrink-0 w-full md:w-1/2 lg:w-1/3 px-4 transition-transform duration-300 hover:scale-105`}
+              data-index={index}
+            >
+              <div class="group h-full relative overflow-hidden rounded-xl shadow-xl">
+                <Image 
+                  src={item.imageUrl}
+                  alt={item.title} 
+                  class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  loading="lazy"
+                />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent">
+                  <div class="absolute bottom-0 left-0 right-0 p-6 flex flex-col">
+                    <h3 class="text-xl md:text-2xl font-bold text-white mb-2">{item.title}</h3>
+                    {item.description && (
+                      <p class="text-gray-200 text-sm md:text-base mb-4 line-clamp-2">{item.description}</p>
+                    )}
+                    {item.link && typeof item.link === 'string' && (
+                      <a 
+                        href={item.link} 
+                        class="inline-flex items-center text-primary hover:text-primary-light font-medium transition-colors"
+                      >
+                        <span>Ver tutorial</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5 ml-1">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                        </svg>
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+      </div>
+
+      <!-- Navigation Controls -->
+      <div class="showcase-controls flex justify-center items-center mt-6 gap-4">
+        <button 
+          type="button"
+          class="showcase-prev rounded-full border border-gray-300 p-2 hover:bg-gray-200 transition text-white"
+          aria-label="Anterior"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+          </svg>
+        </button>
+
+        <div class="showcase-dots flex gap-2"></div>
+
+        <button 
+          type="button"
+          class="showcase-next rounded-full border border-gray-300 p-2 hover:bg-gray-200 transition text-white"
+          aria-label="Próximo"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { initCarousel } from '../scripts/carousel.js';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    // Inicializar o carrossel do Showcase com configurações específicas
+    initCarousel({
+      carouselSelector: '#showcase-slider',
+      cardSelector: '.showcase-card',
+      cardsContainerSelector: '#showcase-cards-container',
+      dotsContainerSelector: '.showcase-dots',
+      prevButtonSelector: 'button[aria-label="Anterior"]',
+      nextButtonSelector: 'button[aria-label="Próximo"]',
+      defaultGroupSize: 3,
+      autoplay: true, // Ativar autoplay para o Showcase
+      autoplayDelay: 5000, // 5 segundos entre transições
+      dotActiveClass: 'bg-primary',
+      dotInactiveClass: 'bg-gray-300',
+      cardWidthClasses: {
+        mobile: 'w-full',
+        tablet: 'md:w-1/2',
+        desktop: 'lg:w-1/3'
+      }
+    });
+  });
+</script>

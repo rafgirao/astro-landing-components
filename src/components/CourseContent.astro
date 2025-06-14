@@ -1,0 +1,230 @@
+---
+import Card from './ui/Card.astro'
+import LessonAccordion from './LessonAccordion.astro'
+
+interface CourseModule {
+  title?: string
+  description?: string
+  lessons: Array<{
+    title?: string
+    description?: string
+    duration?: string
+    format?: string
+  }>
+}
+
+interface Props {
+  // Título da seção
+  sectionTitle?: string
+  sectionSubtitle?: string
+
+  // Informações do curso
+  modules: Array<CourseModule>
+  totalDuration?: string
+  totalLessons?: number
+  courseFormats?: Array<string>
+
+  // Cores e estilos (opcionais com valores padrão)
+  bgColor?: string
+  sectionPadding?: string
+  containerMaxWidth?: string
+
+  // Estilos do título
+  titleClass?: string
+  titleColor?: string
+  subtitleClass?: string
+  subtitleColor?: string
+
+  // Estilos dos módulos
+  moduleCardClass?: string
+  moduleCardBg?: string
+  moduleTitleClass?: string
+  moduleTitleColor?: string
+  moduleDescriptionClass?: string
+  moduleDescriptionColor?: string
+
+  // Estilos das aulas
+  lessonDescriptionClass?: string
+  lessonDescriptionColor?: string
+  lessonMetaClass?: string
+  lessonMetaColor?: string
+
+  // Estilos do resumo
+  summaryCardClass?: string
+  summaryCardBg?: string
+  summaryTitleClass?: string
+  summaryItemClass?: string
+}
+
+const {
+  // Título da seção
+  sectionTitle = 'Conteúdo do Curso',
+  sectionSubtitle = 'Tudo o que você vai aprender neste curso',
+
+  // Informações do curso
+  modules,
+  totalDuration,
+  totalLessons,
+  courseFormats,
+
+  // Cores e estilos da seção
+  bgColor = 'bg-[#F4E2DE]/30',
+  sectionPadding = 'py-24',
+  containerMaxWidth = 'max-w-6xl',
+
+  // Estilos do título
+  titleClass = 'text-3xl md:text-3xl lg:text-4xl font-bold mb-4',
+  titleColor = 'text-primary',
+  subtitleClass = 'text-xl mb-16 max-w-2xl mx-auto',
+  subtitleColor = 'text-secondary/80',
+
+  // Estilos dos módulos
+  moduleCardClass = 'rounded-xl mb-8 relative overflow-hidden bg-white border border-gray-100 shadow-md hover:shadow-xl transition-all duration-300',
+  moduleCardBg = '',
+  moduleTitleClass = 'text-2xl font-semibold mb-2',
+  moduleTitleColor = 'text-primary',
+  moduleDescriptionClass = 'text-base/6',
+  moduleDescriptionColor = 'text-gray-600',
+
+  // Estilos das aulas
+  lessonDescriptionClass = 'text-base/6',
+  lessonDescriptionColor = 'text-gray-600',
+  lessonMetaClass = 'text-sm mt-2 flex gap-2 text-gray-500',
+  lessonMetaColor = '',
+
+  // Estilos do resumo
+  summaryCardClass = 'rounded-xl relative overflow-hidden border border-gray-100 shadow-md',
+  summaryCardBg = 'bg-primary/10',
+  summaryTitleClass = 'text-xl font-semibold mb-4',
+  summaryItemClass = 'flex items-center gap-2 text-base',
+} = Astro.props
+
+// Calcular o número total de aulas se não for fornecido
+const calculatedTotalLessons =
+  totalLessons ||
+  modules.reduce((acc, module) => acc + module.lessons.length, 0)
+---
+
+<style>
+  /* Remover a borda inferior do último item do accordion */
+  :global(.course-accordion .border-b:last-child) {
+    border-bottom: none;
+  }
+</style>
+
+<section class={`${sectionPadding} ${bgColor} relative overflow-hidden`}>
+  <!-- Fundo estilizado -->
+  <div
+    class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
+    aria-hidden="true"
+  >
+    <div
+      class="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#F4E2DE] to-[#025259] opacity-20 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
+      style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)"
+    >
+    </div>
+  </div>
+  <div class={`container mx-auto px-4 ${containerMaxWidth}`}>
+    <!-- Cabeçalho da seção -->
+    <div class="text-center mb-6">
+      <h2 class={`${titleClass} ${titleColor}`}>{sectionTitle}</h2>
+      {
+        sectionSubtitle && (
+          <p class={`${subtitleClass} ${subtitleColor}`}>{sectionSubtitle}</p>
+        )
+      }
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-2 lg:gap-8">
+      <!-- Coluna principal com módulos e aulas -->
+      <div class="lg:col-span-2 h-full">
+        {
+          modules.map((module, index) => (
+            <Card class={`${moduleCardClass} pt-2`} background={moduleCardBg}>
+              <div class="card-header">
+                <h3 class={`${moduleTitleClass} ${moduleTitleColor}`}>
+                  Módulo {index + 1}: {module.title}
+                </h3>
+                {module.description && (
+                  <p
+                    class={`${moduleDescriptionClass} ${moduleDescriptionColor}`}
+                  >
+                    {module.description}
+                  </p>
+                )}
+              </div>
+
+              <div class="card-content">
+                <LessonAccordion
+                  class="course-accordion"
+                  items={module.lessons.map((lesson, i) => ({
+                    title: `Aula ${index + 1}.${i + 1}: ${lesson.title}`,
+                    content: `
+                    ${lesson.description ? `<p class="${lessonDescriptionClass} ${lessonDescriptionColor}">${lesson.description}</p>` : ''}
+                    ${
+                      lesson.duration || lesson.format
+                        ? `<div class="${lessonMetaClass} ${lessonMetaColor}">
+                        ${lesson.duration ? `<span>⏱️ ${lesson.duration}</span>` : ''}
+                        ${lesson.duration && lesson.format ? ' • ' : ''}
+                        ${lesson.format ? `<span>📄 ${lesson.format}</span>` : ''}
+                      </div>`
+                        : ''
+                    }
+                  `,
+                  }))}
+                />
+              </div>
+              <div class="absolute inset-x-0 bottom-0 h-2 bg-gradient-to-r from-primary/80 to-highlight/80" />
+            </Card>
+          ))
+        }
+      </div>
+
+      <!-- Coluna lateral com resumo do curso -->
+      <div class="h-full -mt-2 lg:mt-0">
+        <Card class={`${summaryCardClass} pt-2`} background={summaryCardBg}>
+          <div class="card-header">
+            <h3 class={`${moduleTitleClass} ${moduleTitleColor}`}>
+              Resumo do Curso
+            </h3>
+          </div>
+
+          <div class="card-content">
+            <ul class="space-y-4">
+              <li class={summaryItemClass}>
+                <span class="text-primary">📚</span>
+                <span
+                  >{modules.length}
+                  {modules.length === 1 ? 'Módulo' : 'Módulos'}</span
+                >
+              </li>
+              <li class={summaryItemClass}>
+                <span class="text-primary">📝</span>
+                <span
+                  >{calculatedTotalLessons}
+                  {calculatedTotalLessons === 1 ? 'Aula' : 'Aulas'}</span
+                >
+              </li>
+              {
+                totalDuration && (
+                  <li class={summaryItemClass}>
+                    <span class="text-primary">⏱️</span>
+                    <span>Duração Total: {totalDuration}</span>
+                  </li>
+                )
+              }
+              {
+                courseFormats && courseFormats.length > 0 && (
+                  <li class={summaryItemClass}>
+                    <span class="text-primary">📄</span>
+                    <span>Formatos: {courseFormats.join(', ')}</span>
+                  </li>
+                )
+              }
+            </ul>
+          </div>
+        </Card>
+      </div>
+    </div>
+  </div>
+</section>

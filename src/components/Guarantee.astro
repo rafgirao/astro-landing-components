@@ -1,0 +1,55 @@
+---
+import { Image } from 'astro:assets'
+import warrant from '../assets/images/warrant.webp'
+
+// Tipo para aceitar imagens importadas
+type ImageType = any
+
+interface Props {
+  sectionPadding?: string
+  badgeImg?: ImageType
+  badgeAlt?: string
+  title?: string
+  subtitle?: string
+  description?: string
+  bgColor?: string
+  textColor?: string
+}
+const {
+  badgeImg = warrant,
+  badgeAlt = 'Selo garantia 7 dias',
+  title = 'Compre agora o Creative Play sem nenhum risco!',
+  subtitle = 'Garantia incondicional de 7 dias.',
+  description = 'Se por qualquer razão você achar que o Creative Play não é para você, dentro do prazo de 7 dias, basta solicitar reembolso e devolveremos 100% do valor pago!',
+  bgColor = 'bg-black',
+  textColor = 'text-white',
+  sectionPadding = 'py-24',
+} = Astro.props
+---
+
+<section
+  class={`w-full ${bgColor} ${textColor} px-4 md:px-0 flex flex-col md:flex-row items-center justify-center gap-8 md:gap-16 ${sectionPadding}`}
+>
+  <div
+    class="container mx-auto px-4 flex flex-col md:flex-row items-center justify-center gap-10"
+  >
+    <!-- Selo -->
+    <div
+      class="flex-shrink-0 flex items-center justify-center w-full md:w-auto mb-8 md:mb-0"
+    >
+      <Image
+        src={badgeImg}
+        alt={badgeAlt}
+        class="w-56 max-w-full drop-shadow-lg"
+        width={224}
+        height={224}
+      />
+    </div>
+    <!-- Texto -->
+    <div class="max-w-lg text-center md:text-left">
+      <h2 class="text-3xl md:text-3xl lg:text-4xl font-bold mb-4">{title}</h2>
+      <div class="font-semibold text-lg mb-2 text-highlight">{subtitle}</div>
+      <p class="text-base md:text-lg text-gray-200">{description}</p>
+    </div>
+  </div>
+</section>

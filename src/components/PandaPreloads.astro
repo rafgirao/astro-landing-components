@@ -1,0 +1,13 @@
+---
+const { videoId } = Astro.props;
+---
+<link rel="preload" href="https://player-vz-9f1407b9-3a0.tv.pandavideo.com.br/embed/css/styles.css" as="style" slot="head" />
+<link rel="preload" href="https://player-vz-9f1407b9-3a0.tv.pandavideo.com.br/embed/js/hls.js" as="script" slot="head" />
+<link rel="preload" href="https://player-vz-9f1407b9-3a0.tv.pandavideo.com.br/embed/js/plyr.polyfilled.min.js" as="script" slot="head" />
+<link rel="prerender" href={`https://player-vz-9f1407b9-3a0.tv.pandavideo.com.br/embed/?v=${videoId}`} slot="head" />
+<link rel="preload" href={`https://config.tv.pandavideo.com.br/vz-9f1407b9-3a0/${videoId}.json`} as="fetch" slot="head" />
+<link rel="preload" href="https://config.tv.pandavideo.com.br/vz-9f1407b9-3a0/config.json" as="fetch" slot="head" />
+<link rel="preload" href={`https://b-vz-9f1407b9-3a0.tv.pandavideo.com.br/${videoId}/playlist.m3u8`} as="fetch" slot="head" />
+<link rel="dns-prefetch" href="https://b-vz-9f1407b9-3a0.tv.pandavideo.com.br" slot="head" />
+<link rel="dns-prefetch" href="https://player-vz-9f1407b9-3a0.tv.pandavideo.com.br" slot="head" />
+<link rel="dns-prefetch" href="https://vz-9f1407b9-3a0.b-cdn.net" slot="head" />

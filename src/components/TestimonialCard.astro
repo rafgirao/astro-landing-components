@@ -1,0 +1,105 @@
+---
+import VimeoEmbed from './VimeoEmbed.astro';
+import YoutubeEmbed from './YoutubeEmbed.astro';
+
+interface Props {
+  name: string;
+  role?: string;
+  content: string;
+  mediaType?: 'image' | 'youtube' | 'vimeo' | 'none';
+  mediaUrl?: string;
+  mediaSize?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'full';
+  background?: string;
+}
+
+const {
+  name,
+  role = '',
+  content,
+  mediaType = 'none',
+  mediaUrl = '',
+  mediaSize = 'sm',
+  background = 'bg-white'
+} = Astro.props;
+
+// Extrair ID do vídeo do YouTube ou Vimeo da URL
+function extractVideoId(url: string, type: string): string {
+  if (!url) return '';
+  
+  if (type === 'youtube') {
+    // Padrões de URL do YouTube
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[2].length === 11) ? match[2] : '';
+  } 
+  else if (type === 'vimeo') {
+    // Padrões de URL do Vimeo
+    const regExp = /vimeo\.com\/(?:.*\/)?(?:videos\/)?([0-9]+)/;
+    const match = url.match(regExp);
+    return match ? match[1] : '';
+  }
+  
+  return '';
+}
+
+const videoId = mediaType === 'youtube' || mediaType === 'vimeo' 
+  ? extractVideoId(mediaUrl, mediaType) 
+  : '';
+
+// Determinar se deve mostrar a imagem de perfil ou o placeholder com inicial
+const showProfileImage = mediaType === 'image' && mediaUrl;
+const showInitials = !showProfileImage && mediaType !== 'youtube' && mediaType !== 'vimeo';
+const profileImageUrl = showProfileImage ? mediaUrl : '';
+---
+
+<div class="relative isolate overflow-hidden rounded-xl bg-white shadow-lg ring-1 ring-gray-200 h-full">
+  <!-- Fundo estilizado -->
+  <div class="absolute inset-0 -z-10 bg-[radial-gradient(45rem_50rem_at_top,#F4E2DE,white)] opacity-30"></div>
+  <div class="absolute inset-y-0 right-1/2 -z-10 mr-16 w-[200%] origin-bottom-left skew-x-[-30deg] bg-white shadow-xl ring-1 shadow-[#025259]/10 ring-[#F4E2DE] sm:mr-28 lg:mr-0 xl:mr-16 xl:origin-center"></div>
+  
+  <div class="p-8">
+    <!-- Mídia do depoimento (YouTube ou Vimeo) -->
+    {mediaType === 'youtube' && videoId && (
+      <div class="mb-8">
+        <YoutubeEmbed videoId={videoId} size={mediaSize} />
+      </div>
+    )}
+    
+    {mediaType === 'vimeo' && videoId && (
+      <div class="mb-8">
+        <VimeoEmbed videoId={videoId} size={mediaSize} />
+      </div>
+    )}
+    
+    <figure>
+      <!-- Conteúdo do depoimento -->
+      <blockquote class="text-center text-lg italic font-normal text-[#025259] sm:text-xl">
+        <p>"{content}"</p>
+      </blockquote>
+      
+      <figcaption class="mt-10">
+        <!-- Imagem do autor -->
+        {showProfileImage ? (
+          <img 
+            class="mx-auto size-16 rounded-full object-cover border-2 border-[#007172]" 
+            src={profileImageUrl} 
+            alt={`Foto de ${name}`} 
+            loading="lazy"
+          />
+        ) : showInitials && (
+          <div class="mx-auto size-16 rounded-full bg-[#F4E2DE] flex items-center justify-center text-[#025259] font-bold border-2 border-[#007172]">
+            {name.charAt(0)}
+          </div>
+        )}
+        
+        <!-- Nome e cargo -->
+        <div class="mt-4 flex flex-col items-center justify-center text-base">
+          <div class="font-semibold text-[#025259]">{name}</div>
+          {role && (
+            <div class="text-[#007172] mt-1">{role}</div>
+          )}
+        </div>
+      </figcaption>
+    </figure>
+  </div>
+</div>

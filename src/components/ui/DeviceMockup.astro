@@ -1,0 +1,118 @@
+---
+import { Image } from 'astro:assets'
+
+// Importação direta das imagens do diretório src/assets
+import mockupMobile from '../../assets/images/mockup-mobile.webp'
+import mockupDesktop from '../../assets/images/mockup-desktop.webp'
+
+// Tipo para aceitar imagens importadas
+type ImageType = any
+
+interface Props {
+  imageUrl?: ImageType
+  imageAlt?: string
+  imageUrlMobile?: ImageType
+  imageAltMobile?: string
+  showMobile?: boolean
+  showDesktop?: boolean
+  size?: 'sm' | 'md' | 'lg'
+  class?: string
+}
+
+const {
+  imageUrl = '',
+  imageAlt = 'Screenshot',
+  imageUrlMobile = '',
+  imageAltMobile = 'Mobile screenshot',
+  showMobile = true,
+  showDesktop = true,
+  size = 'md',
+  class: className = '',
+} = Astro.props
+
+// Definir tamanhos com base no prop size
+const sizes = {
+  sm: {
+    container: 'w-14 h-40',
+    desktop: 'w-48 h-32',
+    mobile: 'w-10 h-[18rem] -mr-3 ml-4',
+  },
+  md: {
+    container: 'w-18 h-56',
+    desktop: 'w-64 h-40',
+    mobile: 'w-14 h-[24rem] -mr-5 ml-6',
+  },
+  lg: {
+    container: 'w-24 h-64',
+    desktop: 'w-80 h-48',
+    mobile: 'w-16 h-[28rem] -mr-6 ml-8',
+  },
+}
+---
+
+<div
+  class:list={[
+    'relative flex flex-row items-center justify-center mx-auto',
+    sizes[size].container,
+    className,
+  ]}
+>
+  {/* Mockup Mobile à esquerda (maior e com imagem na tela) */}
+  {
+    showMobile && imageUrlMobile && (
+      <div class:list={['relative z-10 flex-shrink-0', sizes[size].mobile]}>
+        {/* Área da tela do Mobile */}
+        <div
+          class="absolute top-[35%] left-[4%] w-[95%] aspect-[9/19.3] rounded-[6px] overflow-hidden"
+          style="z-index:1;"
+        >
+          <Image
+            src={imageUrlMobile}
+            alt={imageAltMobile}
+            class="w-full h-full object-cover"
+            width={300}
+            height={600}
+          />
+        </div>
+        <Image
+          src={mockupMobile}
+          alt="Mockup mobile"
+          class="absolute inset-0 w-full h-full object-contain pointer-events-none drop-shadow-xl"
+          width={300}
+          height={600}
+          style="z-index:2; position:absolute;"
+        />
+      </div>
+    )
+  }
+
+  {/* Mockup Desktop central com a tela preenchida */}
+  {
+    showDesktop && imageUrl && (
+      <div class:list={['relative', sizes[size].desktop]}>
+        {/* Área da tela do MacBook */}
+        <div
+          class="absolute top-[5%] left-[10%] w-[80%] aspect-[15.8/10] rounded-[4px] overflow-hidden"
+          style="z-index:1;"
+        >
+          <Image
+            src={imageUrl}
+            alt={imageAlt}
+            class="w-full h-full object-cover"
+            width={800}
+            height={500}
+          />
+        </div>
+        {/* Mockup do MacBook */}
+        <Image
+          src={mockupDesktop}
+          alt="Mockup de MacBook"
+          class="absolute inset-0 w-full h-full object-contain pointer-events-none"
+          width={800}
+          height={500}
+          style="z-index:2; position: absolute;"
+        />
+      </div>
+    )
+  }
+</div>

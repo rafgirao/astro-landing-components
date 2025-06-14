@@ -1,0 +1,61 @@
+---
+// Testimonial component in shadcn style
+interface Props {
+  quote: string;
+  author: string;
+  role?: string;
+  avatar?: string;
+  rating?: number;
+  class?: string;
+}
+
+const { 
+  quote, 
+  author, 
+  role = '', 
+  avatar = '', 
+  rating = 0,
+  class: className = '' 
+} = Astro.props;
+---
+
+<div class={`rounded-lg border bg-white p-6 shadow-sm ${className}`}>
+  {rating > 0 && (
+    <div class="flex mb-4">
+      {Array.from({ length: 5 }).map((_, i) => (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill={i < rating ? "currentColor" : "none"}
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class={`h-5 w-5 ${i < rating ? 'text-highlight' : 'text-gray-300'}`}
+        >
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+        </svg>
+      ))}
+    </div>
+  )}
+  
+  <blockquote class="text-lg italic text-gray-700 mb-4">"{quote}"</blockquote>
+  
+  <div class="flex items-center">
+    {avatar && (
+      <div class="mr-4">
+        <img 
+          src={avatar} 
+          alt={`Foto de ${author}`} 
+          class="h-10 w-10 rounded-full object-cover"
+        />
+      </div>
+    )}
+    <div>
+      <div class="font-medium">{author}</div>
+      {role && <div class="text-sm text-gray-500">{role}</div>}
+    </div>
+  </div>
+</div>

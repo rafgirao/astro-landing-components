@@ -1,0 +1,419 @@
+---
+// Hero component
+import Button from './ui/Button.astro'
+import VimeoEmbed from './VimeoEmbed.astro'
+import ImageEmbed from './ImageEmbed.astro'
+import YoutubeEmbed from './YoutubeEmbed.astro'
+import PandaEmbed from './PandaEmbed.astro'
+import '../styles/video-embed.css'
+import { Image } from 'astro:assets'
+
+// Tipo para aceitar imagens importadas
+type ImageType = any;
+
+interface Props {
+  sectionPadding?: string
+  headline: string
+  subheadline: string
+  mediaType?: 'image' | 'video' | 'vimeo' | 'youtube' | 'panda' | 'none'
+  mediaUrl?: string
+  mediaAlt?: string
+  mediaSize?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'full'
+  mediaOrientation?: 'landscape' | 'portrait' | 'auto'
+  ctaText?: string
+  ctaLink?: string
+  bgColor?: string
+  textColor?: string
+  align?: 'left' | 'center' | 'right'
+  layout?: 'media-right' | 'media-left' | 'stacked'
+  backgroundImage?: boolean
+  backgroundImageUrl?: ImageType
+  backgroundImageOverlay?: boolean
+  backgroundOverlayOpacity?: string
+  id?: string
+}
+
+const {
+  headline,
+  subheadline,
+  mediaType = 'none',
+  mediaUrl = '',
+  mediaAlt = 'Hero image',
+  ctaText = 'Comprar Agora',
+  ctaLink = '#',
+  bgColor = 'bg-primary',
+  textColor = 'text-white',
+  align = 'center',
+  layout = 'stacked',
+  backgroundImageUrl = '',
+  backgroundOverlayOpacity = '50',
+  mediaSize = 'full',
+  mediaOrientation = 'auto',
+  sectionPadding = 'py-24',
+  id,
+} = Astro.props
+
+const alignClasses = {
+  left: 'text-left',
+  center: 'text-center',
+  right: 'text-right',
+}
+
+// Mapeamento mediaSize para classes Tailwind
+const mediaSizeClasses = {
+  xs: 'max-w-xs w-full',
+  sm: 'max-w-sm w-full',
+  md: 'max-w-md w-full',
+  lg: 'max-w-lg w-full',
+  xl: 'max-w-xl w-full',
+  full: 'w-full',
+}
+const mediaClass = `${mediaSizeClasses[mediaSize] || 'w-full'} rounded-2xl shadow-xl hover:scale-105 hover:shadow-2xl transition-transform duration-300 mx-auto`;
+---
+
+<section
+  id={id || 'hero'}
+  class={`min-h-screen flex items-center relative overflow-hidden ${textColor} py-12 md:${sectionPadding}`}
+  style={backgroundImageUrl
+    ? `background-image: url(${backgroundImageUrl}); background-size: cover; background-position: center;`
+    : ''}
+>
+  {/* Blobs/gradientes decorativos */}
+  <div class="pointer-events-none absolute -top-32 -left-32 w-[36rem] h-[36rem] bg-gradient-to-br from-primary/30 to-accent/10 rounded-full blur-3xl opacity-60 z-0"></div>
+  <div class="pointer-events-none absolute -bottom-32 right-0 w-[28rem] h-[28rem] bg-gradient-to-tr from-accent/40 via-primary/20 to-white rounded-full blur-2xl opacity-50 z-0"></div>
+  {/* Overlay escuro para quando tem imagem de fundo */}
+  {
+    backgroundImageUrl && (
+      <div
+        class="absolute inset-0 z-0 bg-black"
+        style={`opacity: ${parseInt(backgroundOverlayOpacity) / 100}`}
+      />
+    )
+  }
+
+  {/* Fundo colorido quando não tem imagem */}
+  {!backgroundImageUrl && <div class={`absolute inset-0 z-0 ${bgColor}`} />}
+
+  {/* Vídeo de fundo (independente do layout) */}
+  {
+    mediaType === 'video' && backgroundImageUrl && (
+      <div class="absolute inset-0 z-0">
+        <video
+          autoplay
+          muted
+          loop
+          playsinline
+          class="w-full h-full object-cover"
+        >
+          <source src={mediaUrl} type="video/mp4" />
+        </video>
+        <div class="absolute inset-0 bg-black bg-opacity-50" />
+      </div>
+    )
+  }
+
+  {/* Imagem de fundo */}
+  {backgroundImageUrl && (
+    <div class="absolute inset-0 w-full h-full z-0">
+      <Image
+        src={backgroundImageUrl}
+        alt="Background"
+        class="w-full h-full object-cover object-center"
+        width={1920}
+        height={1080}
+      />
+      <div class="absolute inset-0 bg-black" style={`opacity: ${Number(backgroundOverlayOpacity) / 100}`}></div>
+    </div>
+  )}
+
+  <div class="container mx-auto px-4 pt-0 relative z-10 flex flex-col justify-center min-h-[40vh] md:min-h-[70vh]">
+    {/* Layout empilhado para dispositivos móveis (sempre visível em mobile) */}
+    <div class="block md:hidden">
+      <div class={`max-w-2xl mx-auto ${alignClasses[align]}`}> 
+        <h1 class="text-3xl sm:text-5xl font-extrabold leading-tight tracking-tight drop-shadow-lg mb-2 sm:mb-4" set:html={headline} />
+        <p class="text-lg sm:text-xl font-medium mb-3 sm:mb-8 opacity-90" set:html={subheadline} />
+
+        {mediaType === 'image' && (
+          <div class="mb-8">
+            <ImageEmbed
+              src={mediaUrl}
+              alt={mediaAlt}
+              class={mediaClass}
+            />
+          </div>
+        )}
+        
+        {mediaType === 'video' && (
+          <div class="mb-8">
+            <video controls class="w-full h-auto rounded-lg shadow-lg">
+              <source src={mediaUrl} type="video/mp4" />
+            </video>
+          </div>
+        )}
+        
+        {mediaType === 'vimeo' && (
+          <div class="mb-8">
+            <VimeoEmbed
+              videoId={mediaUrl.replace(/[^0-9]/g, '')}
+              title={mediaAlt}
+              size={mediaSize}
+              class={mediaClass}
+            />
+          </div>
+        )}
+        
+        {mediaType === 'youtube' && (
+          <div class="mb-8">
+            <YoutubeEmbed
+              videoId={mediaUrl.includes('youtu.be/') ? mediaUrl.split('youtu.be/')[1] : (mediaUrl.split('v=')[1] ? mediaUrl.split('v=')[1].split('&')[0] : '')}
+              title={mediaAlt}
+              size={mediaSize}
+              class={mediaClass}
+            />
+          </div>
+        )}
+        
+        {mediaType === 'panda' && (
+          <div class="mb-8">
+            <PandaEmbed
+              videoId={mediaUrl}
+              title={mediaAlt}
+              size={mediaSize}
+              class={mediaClass}
+              orientation={mediaOrientation}
+            />
+          </div>
+        )}
+        
+        <div class={`flex flex-wrap gap-4 ${align === 'center' ? 'justify-center' : align === 'right' ? 'justify-end' : 'justify-start'}`}>
+          <a href={ctaLink}>
+            <Button variant="accent" size="lg" rounded={false}>
+              {ctaText}
+            </Button>
+          </a>
+        </div>
+        <!-- Prova social: sempre abaixo do botão CTA (MOBILE) -->
+        <div class="flex flex-col items-center gap-2 mt-6">
+          <div class="flex -space-x-3">
+            <img src="https://randomuser.me/api/portraits/men/32.jpg" class="w-10 md:w-12 h-10 md:h-12 rounded-full border-2 border-white shadow-md object-cover" alt="Aluno 1" loading="lazy" />
+            <img src="https://randomuser.me/api/portraits/women/44.jpg" class="w-10 md:w-12 h-10 md:h-12 rounded-full border-2 border-white shadow-md object-cover" alt="Aluno 2" loading="lazy" />
+            <img src="https://randomuser.me/api/portraits/men/65.jpg" class="w-10 md:w-12 h-10 md:h-12 rounded-full border-2 border-white shadow-md object-cover" alt="Aluno 3" loading="lazy" />
+            <img src="https://randomuser.me/api/portraits/women/68.jpg" class="w-10 md:w-12 h-10 md:h-12 rounded-full border-2 border-white shadow-md object-cover" alt="Aluno 4" loading="lazy" />
+            <img src="https://randomuser.me/api/portraits/men/76.jpg" class="w-10 md:w-12 h-10 md:h-12 rounded-full border-2 border-white shadow-md object-cover" alt="Aluno 5" loading="lazy" />
+          </div>
+          <span class="text-base md:text-lg font-semibold text-white/90 whitespace-nowrap">+ de 2000 alunos já aprenderam com a gente</span>
+        </div>
+      </div>
+    </div>
+
+    {/* Layout escolhido para desktop */}
+    <div class="hidden md:block">
+      {/* Layout empilhado (padrão) */}
+      {layout === 'stacked' && (
+        <div class={`max-w-3xl mx-auto ${alignClasses[align]}`}>
+          <h1 class="text-6xl font-extrabold leading-tight tracking-tight drop-shadow-2xl mb-6" set:html={headline} />
+          <p class="text-2xl font-medium mb-10 opacity-90" set:html={subheadline} />
+
+
+          {mediaType === 'image' && (
+            <div class="mb-10">
+              <ImageEmbed
+                src={mediaUrl}
+                alt={mediaAlt}
+                class={mediaClass}
+              />
+            </div>
+          )}
+          
+          {mediaType === 'video' && (
+            <div class="mb-8">
+              <video controls class="w-full h-auto rounded-lg shadow-lg">
+                <source src={mediaUrl} type="video/mp4" />
+              </video>
+            </div>
+          )}
+          
+          {mediaType === 'vimeo' && (
+            <div class="mb-8">
+              <VimeoEmbed
+                videoId={mediaUrl.replace(/[^0-9]/g, '')}
+                title={mediaAlt}
+                size={mediaSize}
+              />
+            </div>
+          )}
+          
+          {mediaType === 'youtube' && (
+            <div class="mb-8">
+              <YoutubeEmbed
+                videoId={mediaUrl.includes('youtu.be/') ? mediaUrl.split('youtu.be/')[1] : (mediaUrl.split('v=')[1] ? mediaUrl.split('v=')[1].split('&')[0] : '')}
+                title={mediaAlt}
+                size={mediaSize}
+                class={mediaClass}
+              />
+            </div>
+          )}
+          
+          {mediaType === 'panda' && (
+            <div class="mb-8">
+              <PandaEmbed
+                videoId={mediaUrl}
+                title={mediaAlt}
+                size={mediaSize}
+                class={mediaClass}
+                orientation={mediaOrientation}
+              />
+            </div>
+          )}
+          
+          <div class={`flex flex-wrap gap-4 ${align === 'center' ? 'justify-center' : align === 'right' ? 'justify-end' : 'justify-start'}`}>
+            <a href={ctaLink}>
+              <Button variant="accent" size="lg" rounded={false}>
+                {ctaText}
+              </Button>
+            </a>
+          </div>
+          <!-- Prova social: sempre abaixo do botão CTA -->
+          <div class="flex flex-col items-center gap-2 mt-6">
+            <div class="flex -space-x-3">
+              <img src="https://randomuser.me/api/portraits/men/32.jpg" class="w-10 md:w-12 h-10 md:h-12 rounded-full border-2 border-white shadow-md object-cover" alt="Aluno 1" loading="lazy" />
+              <img src="https://randomuser.me/api/portraits/women/44.jpg" class="w-10 md:w-12 h-10 md:h-12 rounded-full border-2 border-white shadow-md object-cover" alt="Aluno 2" loading="lazy" />
+              <img src="https://randomuser.me/api/portraits/men/65.jpg" class="w-10 md:w-12 h-10 md:h-12 rounded-full border-2 border-white shadow-md object-cover" alt="Aluno 3" loading="lazy" />
+              <img src="https://randomuser.me/api/portraits/women/68.jpg" class="w-10 md:w-12 h-10 md:h-12 rounded-full border-2 border-white shadow-md object-cover" alt="Aluno 4" loading="lazy" />
+              <img src="https://randomuser.me/api/portraits/men/76.jpg" class="w-10 md:w-12 h-10 md:h-12 rounded-full border-2 border-white shadow-md object-cover" alt="Aluno 5" loading="lazy" />
+            </div>
+            <span class="text-base md:text-lg font-semibold text-white/90 whitespace-nowrap">+ de 2000 alunos já aprenderam com a gente</span>
+          </div>
+        </div>
+      )}
+
+      {/* Layout com mídia à direita */}
+      {layout === 'media-right' && (
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+          <div class={alignClasses[align]}>
+            <h1 class="text-4xl md:text-5xl font-bold mb-4" set:html={headline} />
+            <p class="text-lg md:text-xl mb-8" set:html={subheadline} />
+            
+            <div class={`flex flex-wrap gap-4 ${align === 'center' ? 'justify-center' : align === 'right' ? 'justify-end' : 'justify-start'}`}>
+              <a href={ctaLink}>
+                <Button variant="accent" size="lg" rounded={false}>
+                  {ctaText}
+                </Button>
+              </a>
+            </div>
+            <!-- Prova social: sempre abaixo do botão CTA -->
+            <div class="flex flex-col items-center gap-2 mt-6">
+              <div class="flex -space-x-3">
+                <img src="https://randomuser.me/api/portraits/men/32.jpg" class="w-10 md:w-12 h-10 md:h-12 rounded-full border-2 border-white shadow-md object-cover" alt="Aluno 1" loading="lazy" />
+                <img src="https://randomuser.me/api/portraits/women/44.jpg" class="w-10 md:w-12 h-10 md:h-12 rounded-full border-2 border-white shadow-md object-cover" alt="Aluno 2" loading="lazy" />
+                <img src="https://randomuser.me/api/portraits/men/65.jpg" class="w-10 md:w-12 h-10 md:h-12 rounded-full border-2 border-white shadow-md object-cover" alt="Aluno 3" loading="lazy" />
+                <img src="https://randomuser.me/api/portraits/women/68.jpg" class="w-10 md:w-12 h-10 md:h-12 rounded-full border-2 border-white shadow-md object-cover" alt="Aluno 4" loading="lazy" />
+                <img src="https://randomuser.me/api/portraits/men/76.jpg" class="w-10 md:w-12 h-10 md:h-12 rounded-full border-2 border-white shadow-md object-cover" alt="Aluno 5" loading="lazy" />
+              </div>
+              <span class="text-base md:text-lg font-semibold text-white/90 whitespace-nowrap">+ de 2000 alunos já aprenderam com a gente</span>
+            </div>
+          </div>
+
+          <div class="order-first md:order-last">
+            {mediaType === 'image' && (
+              <ImageEmbed
+                src={mediaUrl}
+                alt={mediaAlt}
+                size={mediaSize}
+              />
+            )}
+
+            {mediaType === 'video' && (
+              <video controls class="w-full h-auto rounded-lg shadow-lg">
+                <source src={mediaUrl} type="video/mp4" />
+              </video>
+            )}
+
+            {mediaType === 'vimeo' && (
+              <VimeoEmbed
+                videoId={mediaUrl.replace(/[^0-9]/g, '')}
+                title={mediaAlt}
+                size={mediaSize}
+              />
+            )}
+
+            {mediaType === 'youtube' && (
+              <YoutubeEmbed
+                videoId={mediaUrl.includes('youtu.be/') ? mediaUrl.split('youtu.be/')[1] : mediaUrl.split('v=')[1]?.split('&')[0]}
+                title={mediaAlt}
+                size={mediaSize}
+              />
+            )}
+
+            {mediaType === 'panda' && (
+              <PandaEmbed
+                videoId={mediaUrl}
+                title={mediaAlt}
+                size={mediaSize}
+              />
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Layout com mídia à esquerda */}
+      {layout === 'media-left' && (
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+          <div>
+
+            {mediaType === 'image' && (
+              <ImageEmbed
+                src={mediaUrl}
+                alt={mediaAlt}
+                size={mediaSize}
+              />
+            )}
+
+            {mediaType === 'video' && (
+              <video controls class="w-full h-auto rounded-lg shadow-lg">
+                <source src={mediaUrl} type="video/mp4" />
+              </video>
+            )}
+
+            {mediaType === 'vimeo' && (
+              <VimeoEmbed
+                videoId={mediaUrl.replace(/[^0-9]/g, '')}
+                title={mediaAlt}
+                size={mediaSize}
+              />
+            )}
+
+            {mediaType === 'youtube' && (
+              <YoutubeEmbed
+                videoId={mediaUrl.includes('youtu.be/') ? mediaUrl.split('youtu.be/')[1] : mediaUrl.split('v=')[1]?.split('&')[0]}
+                title={mediaAlt}
+                size={mediaSize}
+              />
+            )}
+
+            {mediaType === 'panda' && (
+              <PandaEmbed
+                videoId={mediaUrl}
+                title={mediaAlt}
+                size={mediaSize}
+              />
+            )}
+          </div>
+
+          <div class={alignClasses[align]}>
+            <h1 class="text-4xl md:text-5xl font-bold mb-4" set:html={headline} />
+            <p class="text-lg md:text-xl mb-8" set:html={subheadline} />
+            
+            <div class={`flex flex-wrap gap-4 ${align === 'center' ? 'justify-center' : align === 'right' ? 'justify-end' : 'justify-start'}`}>
+              <a href={ctaLink}>
+                <Button variant="accent" size="lg" rounded={false}>
+                  {ctaText}
+                </Button>
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  </div>
+</section>

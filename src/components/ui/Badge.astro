@@ -1,0 +1,48 @@
+---
+// Badge component in shadcn style
+interface Props {
+  variant?: 'default' | 'primary' | 'secondary' | 'accent' | 'highlight' | 'outline' | 'ghost';
+  size?: 'sm' | 'default' | 'lg';
+  class?: string;
+  [x: string]: any;
+}
+
+const {
+  variant = 'default',
+  size = 'default',
+  class: className = '',
+  ...rest
+} = Astro.props;
+
+// Base styles
+const baseStyles = "inline-flex items-center rounded-full font-medium";
+
+// Size styles
+const sizeStyles = {
+  sm: "px-2 py-0.5 text-xs",
+  default: "px-2.5 py-0.5 text-sm",
+  lg: "px-3 py-1 text-base"
+};
+
+// Variant styles
+const variantStyles = {
+  default: "bg-primary text-white hover:bg-primary/90",
+  primary: "bg-primary text-white",
+  secondary: "bg-secondary text-white",
+  accent: "bg-accent text-white",
+  highlight: "bg-highlight text-white",
+  outline: "border border-primary text-primary",
+  ghost: "bg-primary/10 text-primary"
+};
+
+const classes = [
+  baseStyles,
+  sizeStyles[size],
+  variantStyles[variant],
+  className
+].join(" ");
+---
+
+<span class={classes} {...rest}>
+  <slot />
+</span>

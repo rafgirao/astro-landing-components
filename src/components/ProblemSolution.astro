@@ -1,0 +1,207 @@
+---
+import Card from './ui/Card.astro'
+import Button from './ui/Button.astro'
+
+interface Props {
+  // Títulos
+  problemTitle?: string
+  solutionTitle?: string
+  ctaTitle?: string
+  ctaDescription?: string
+
+  // Itens de problema e solução
+  problemItems: Array<string>
+  solutionItems: Array<string>
+
+  // CTA
+  ctaText: string
+  ctaLink: string
+  ctaVariant?:
+    | 'primary'
+    | 'secondary'
+    | 'accent'
+    | 'outline'
+    | 'ghost'
+    | 'link'
+    | 'default'
+  ctaSize?: 'sm' | 'lg' | 'default'
+
+  // Cores e estilos (opcionais com valores padrão)
+  bgColor?: string
+  sectionPadding?: string
+  containerMaxWidth?: string
+
+  // Card do problema
+  problemCardClass?: string
+  problemHeaderClass?: string
+  problemTitleClass?: string
+  problemTitleColor?: string
+  problemIconColor?: string
+  problemIcon?: string
+  problemTextColor?: string
+
+  // Card da solução
+  solutionCardClass?: string
+  solutionHeaderClass?: string
+  solutionTitleClass?: string
+  solutionTitleColor?: string
+  solutionIconColor?: string
+  solutionIcon?: string
+  solutionTextColor?: string
+
+  // Card do CTA
+  ctaCardClass?: string
+  ctaHeaderClass?: string
+  ctaTitleClass?: string
+  ctaTitleColor?: string
+  ctaDescriptionClass?: string
+  ctaClass?: string
+}
+
+const {
+  // Títulos com valores padrão
+  problemTitle = 'Você já se sentiu assim?',
+  solutionTitle = 'Imagine se você pudesse...',
+  ctaTitle = 'Este é exatamente o que você precisa!',
+  ctaDescription = 'Transforme o impossível em possível com a solução perfeita para o seu problema.',
+
+  // Itens (obrigatórios)
+  problemItems,
+  solutionItems,
+
+  // CTA
+  ctaText,
+  ctaLink,
+  ctaVariant = 'accent',
+  ctaSize = 'lg',
+  ctaClass = 'hover:scale-105 transition-transform',
+
+  // Cores e estilos da seção
+  bgColor = 'bg-background',
+  sectionPadding = 'py-16',
+  containerMaxWidth = 'max-w-5xl',
+
+  // Card do problema
+  problemCardClass = 'bg-white border-primary/20 shadow-lg h-full',
+  problemHeaderClass = 'bg-primary/5',
+  problemTitleClass = 'text-3xl',
+  problemTitleColor = 'text-primary',
+  problemIconColor = 'text-accent',
+  problemIcon = '✘',
+  problemTextColor = 'text-gray-700',
+
+  // Card da solução
+  solutionCardClass = 'bg-gradient-to-br from-primary/5 to-secondary/10 border-secondary border-2 h-full shadow-lg',
+  solutionHeaderClass = 'bg-secondary/10',
+  solutionTitleClass = 'text-3xl',
+  solutionTitleColor = 'text-secondary',
+  solutionIconColor = 'text-secondary',
+  solutionIcon = '✓',
+  solutionTextColor = 'text-gray-700',
+
+  // Card do CTA
+  ctaCardClass = 'bg-highlight/10 border-highlight shadow-lg',
+  ctaHeaderClass = '',
+  ctaTitleClass = 'text-2xl',
+  ctaTitleColor = 'text-primary',
+  ctaDescriptionClass = 'text-lg max-w-3xl mx-auto mt-4',
+} = Astro.props
+---
+
+<!-- Problema e Solução Section -->
+<section
+  class={`${sectionPadding} ${bgColor} relative isolate overflow-hidden`}
+>
+  <!-- Fundo estilizado -->
+  <div
+    class="absolute inset-x-0 -top-3 -z-10 transform-gpu overflow-hidden px-36 blur-3xl"
+    aria-hidden="true"
+  >
+    <div
+      class="mx-auto aspect-[1155/678] w-[72.1875rem] bg-gradient-to-tr from-[#F4E2DE] to-[#025259] opacity-20"
+      style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)"
+    >
+    </div>
+  </div>
+
+  <div class={`container mx-auto px-4 ${containerMaxWidth}`}>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch mx-auto">
+      <!-- Coluna do Problema -->
+      <div
+        class="rounded-xl bg-white/60 p-8 ring-1 ring-gray-900/10 shadow-lg sm:p-10"
+      >
+        <h3 class="text-3xl font-semibold text-[#025259] mb-4">
+          {problemTitle}
+        </h3>
+
+        <div class="mt-8">
+          <ul class="space-y-4">
+            {
+              problemItems.map((item) => (
+                <li class="flex gap-x-3 items-start">
+                  <svg
+                    class="h-6 w-5 flex-none text-[#D94F04]"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
+                  </svg>
+                  <p class={problemTextColor}>{item}</p>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+
+      <!-- Coluna da Solução -->
+      <div
+        class="relative rounded-xl bg-[#025259] p-8 shadow-2xl ring-1 ring-gray-900/10 sm:p-10"
+      >
+        <h3 class="text-3xl font-semibold text-[#F29325] mb-4">
+          {solutionTitle}
+        </h3>
+
+        <div class="mt-8">
+          <ul class="space-y-4">
+            {
+              solutionItems.map((item) => (
+                <li class="flex gap-x-3 items-start">
+                  <svg
+                    class="h-6 w-5 flex-none text-[#F29325]"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M16.704 4.153a.75.75 0 0 1 .143 1.052l-8 10.5a.75.75 0 0 1-1.127.075l-4.5-4.5a.75.75 0 0 1 1.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 0 1 1.05-.143Z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                  <p class="text-white">{item}</p>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chamada para ação central -->
+    <div class="mx-auto mt-16 max-w-2xl text-center">
+      <h3 class="text-3xl md:text-3xl lg:text-4xl font-bold text-[#025259] mb-4">{ctaTitle}</h3>
+      <p class="text-lg text-gray-600 mb-8" set:html={ctaDescription}></p>
+      <Button
+        as="a"
+        href={ctaLink}
+        variant={ctaVariant}
+        size={ctaSize}
+        class={ctaClass}
+      >
+        {ctaText}
+      </Button>
+    </div>
+  </div>
+</section>

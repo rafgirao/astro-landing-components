@@ -1,0 +1,34 @@
+---
+interface Props {
+  videoId: string;
+  title?: string;
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'full';
+  class?: string;
+}
+
+const { videoId, title = "Vídeo do Vimeo", size = 'full', class: customClass = '' } = Astro.props;
+
+// Definir classes de tamanho
+const sizeClasses = {
+  xs: 'max-w-xs mx-auto', // 320px
+  sm: 'max-w-sm mx-auto', // 384px
+  md: 'max-w-2xl mx-auto', // 672px
+  lg: 'max-w-4xl mx-auto', // 896px
+  xl: 'max-w-5xl mx-auto', // 1024px
+  full: 'w-full' // 100% da largura disponível
+};
+---
+
+<div class={customClass ? customClass : sizeClasses[size]}>
+  <div style="padding:56.25% 0 0 0;position:relative;">
+    <iframe 
+      src={`https://player.vimeo.com/video/${videoId}?badge=0&amp;autopause=0&amp;player_id=0&amp;app_id=58479`}
+      frameborder="0" 
+      allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media" 
+      style="position:absolute;top:0;left:0;width:100%;height:100%;" 
+      title={title}
+      class="rounded-lg shadow-lg"
+    />
+  </div>
+</div>
+<script src="https://player.vimeo.com/api/player.js"></script>

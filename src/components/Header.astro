@@ -1,0 +1,57 @@
+---
+import Button from './ui/Button.astro';
+---
+
+<header class="bg-primary text-white shadow-md">
+  <div class="container mx-auto py-4 px-4 flex justify-between items-center">
+    <div class="flex items-center">
+      <a href="/" class="text-2xl font-bold">MeuSite</a>
+    </div>
+    
+    <nav class="hidden md:block">
+      <ul class="flex space-x-6">
+        <li><a href="/" class="hover:text-highlight transition-colors">Home</a></li>
+        <li><a href="/produto1" class="hover:text-highlight transition-colors">Produto</a></li>
+        <li><a href="/obrigado" class="hover:text-highlight transition-colors">Obrigado</a></li>
+      </ul>
+    </nav>
+    
+    <div class="hidden md:block">
+      <Button variant="accent" size="sm">Comprar Agora</Button>
+    </div>
+    
+    <button class="md:hidden text-white focus:outline-none" id="mobile-menu-button" aria-label="Menu">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+    </button>
+  </div>
+  
+  <!-- Mobile menu -->
+  <div class="md:hidden hidden bg-secondary" id="mobile-menu">
+    <div class="container mx-auto px-4 py-3">
+      <ul class="space-y-2">
+        <li><a href="/" class="block py-2 hover:text-highlight transition-colors">Home</a></li>
+        <li><a href="/produto1" class="block py-2 hover:text-highlight transition-colors">Produto</a></li>
+        <li><a href="/obrigado" class="block py-2 hover:text-highlight transition-colors">Obrigado</a></li>
+      </ul>
+      <div class="mt-4">
+        <Button variant="accent" size="sm" class="w-full">Comprar Agora</Button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<script>
+  // Toggle mobile menu
+  document.addEventListener('DOMContentLoaded', () => {
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    
+    if (mobileMenuButton && mobileMenu) {
+      mobileMenuButton.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+      });
+    }
+  });
+</script>

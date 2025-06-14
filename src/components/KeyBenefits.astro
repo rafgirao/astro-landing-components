@@ -1,0 +1,143 @@
+---
+import Card from './ui/Card.astro'
+
+interface BenefitItem {
+  icon: string
+  title: string
+  description: string
+}
+
+interface Props {
+  // Título da seção
+  sectionTitle?: string
+  sectionSubtitle?: string
+
+  // Itens de benefícios
+  benefits: Array<BenefitItem>
+
+  // Layout e estilo
+  layout?: 'grid' | 'list'
+  columns?: string
+
+  // Cores e estilos (opcionais com valores padrão)
+  bgColor?: string
+  sectionPadding?: string
+  containerMaxWidth?: string
+
+  // Estilos do título
+  titleClass?: string
+  titleColor?: string
+  subtitleClass?: string
+  subtitleColor?: string
+
+  // Estilos dos cards
+  cardClass?: string
+  iconClass?: string
+  iconSize?: string
+  iconColor?: string
+  benefitTitleClass?: string
+  benefitTitleColor?: string
+  benefitDescriptionClass?: string
+  benefitDescriptionColor?: string
+}
+
+const {
+  // Título da seção
+  sectionTitle = 'Benefícios Principais',
+  sectionSubtitle = 'O que você vai conquistar com este curso',
+
+  // Itens de benefícios (obrigatório)
+  benefits,
+
+  // Layout e estilo
+  layout = 'grid',
+  columns = 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3',
+
+  // Cores e estilos da seção
+  bgColor = 'bg-[#F4E2DE]/30',
+  sectionPadding = 'py-24',
+  containerMaxWidth = 'max-w-6xl',
+
+  // Estilos do título
+  titleClass = 'text-3xl md:text-3xl lg:text-4xl font-bold mb-4',
+  titleColor = 'text-primary',
+  subtitleClass = 'text-xl mb-16 max-w-2xl mx-auto',
+  subtitleColor = 'text-secondary/80',
+
+  // Estilos dos cards
+  cardClass = 'h-full relative overflow-hidden rounded-xl bg-white shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-primary/20',
+  iconClass = 'mb-4',
+  iconSize = 'text-4xl',
+  iconColor = 'text-accent',
+  benefitTitleClass = 'text-xl font-medium tracking-tight mb-2',
+  benefitTitleColor = 'text-primary',
+  benefitDescriptionClass = 'text-base/6',
+  benefitDescriptionColor = 'text-gray-600',
+} = Astro.props
+---
+
+<section class={`${sectionPadding} ${bgColor} relative overflow-hidden`}>
+  <!-- Fundo estilizado -->
+  <div
+    class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
+    aria-hidden="true"
+  >
+    <div
+      class="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#F4E2DE] to-[#025259] opacity-20 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
+      style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)"
+    >
+    </div>
+  </div>
+
+  <div class={`container mx-auto px-4 ${containerMaxWidth}`}>
+    <!-- Cabeçalho da seção -->
+    <div class="text-center mb-12">
+      <h2 class={`${titleClass} ${titleColor}`}>{sectionTitle}</h2>
+      {
+        sectionSubtitle && (
+          <p class={`${subtitleClass} ${subtitleColor}`}>{sectionSubtitle}</p>
+        )
+      }
+    </div>
+
+    <!-- Grid de benefícios -->
+    <div
+      class={layout === 'grid' ? `grid ${columns} gap-6 sm:gap-8` : 'space-y-8'}
+    >
+      {
+        benefits.map((benefit) => (
+          <Card class={`rounded-xl ${cardClass}`}>
+            <div class="p-8 sm:p-10">
+              <div
+                class={`inline-flex items-center justify-center h-12 w-12 rounded-xl ${iconColor} bg-primary/10 mb-6`}
+              >
+                <span class={`${iconSize}`}>{benefit.icon}</span>
+              </div>
+              <h3 class={`${benefitTitleClass} ${benefitTitleColor}`}>
+                {benefit.title}
+              </h3>
+              <p
+                class={`mt-3 ${benefitDescriptionClass} ${benefitDescriptionColor}`}
+              >
+                {benefit.description}
+              </p>
+            </div>
+            <div class="absolute inset-x-0 bottom-0 h-2 bg-gradient-to-r from-primary/80 to-highlight/80" />
+          </Card>
+        ))
+      }
+    </div>
+
+    <!-- Fundo estilizado inferior -->
+    <div
+      class="absolute inset-x-0 bottom-0 -z-10 transform-gpu overflow-hidden blur-3xl"
+      aria-hidden="true"
+    >
+      <div
+        class="relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr from-[#F29325] to-[#025259] opacity-10 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]"
+        style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)"
+      >
+      </div>
+    </div>
+  </div>
+</section>

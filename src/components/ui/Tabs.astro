@@ -1,0 +1,81 @@
+---
+// Tabs component in shadcn style
+interface Tab {
+  id: string;
+  label: string;
+  content: string;
+}
+
+interface Props {
+  tabs: Tab[];
+  defaultTab?: string;
+  class?: string;
+}
+
+const { tabs, defaultTab = tabs[0]?.id, class: className = '' } = Astro.props;
+const uniqueId = `tabs-${Math.random().toString(36).substring(2, 9)}`;
+---
+
+<div class={`w-full ${className}`}>
+  <div class="flex border-b" role="tablist" aria-orientation="horizontal">
+    {tabs.map((tab) => (
+      <button
+        id={`${uniqueId}-tab-${tab.id}`}
+        class="px-4 py-2 text-sm font-medium transition-all border-b-2 -mb-px data-[state=active]:border-primary data-[state=active]:text-primary data-[state=inactive]:border-transparent"
+        role="tab"
+        aria-selected={tab.id === defaultTab ? "true" : "false"}
+        aria-controls={`${uniqueId}-content-${tab.id}`}
+        data-state={tab.id === defaultTab ? "active" : "inactive"}
+        data-tab-trigger
+        data-tab-id={tab.id}
+      >
+        {tab.label}
+      </button>
+    ))}
+  </div>
+  <div class="mt-4">
+    {tabs.map((tab) => (
+      <div
+        id={`${uniqueId}-content-${tab.id}`}
+        class="p-4"
+        role="tabpanel"
+        aria-labelledby={`${uniqueId}-tab-${tab.id}`}
+        data-state={tab.id === defaultTab ? "active" : "inactive"}
+        data-tab-content
+        data-tab-id={tab.id}
+        hidden={tab.id !== defaultTab}
+      >
+        <p>{tab.content}</p>
+      </div>
+    ))}
+  </div>
+</div>
+
+<script>
+  // Initialize tabs
+  document.addEventListener('DOMContentLoaded', () => {
+    const tabTriggers = document.querySelectorAll('[data-tab-trigger]');
+    
+    tabTriggers.forEach(trigger => {
+      trigger.addEventListener('click', () => {
+        const tabId = trigger.getAttribute('data-tab-id');
+        const tabGroup = trigger.closest('div[role="tablist"]').parentElement;
+        
+        // Update tab triggers
+        tabGroup.querySelectorAll('[data-tab-trigger]').forEach(el => {
+          const state = el.getAttribute('data-tab-id') === tabId ? 'active' : 'inactive';
+          el.setAttribute('data-state', state);
+          el.setAttribute('aria-selected', state === 'active' ? 'true' : 'false');
+        });
+        
+        // Update tab contents
+        tabGroup.querySelectorAll('[data-tab-content]').forEach(el => {
+          const isActive = el.getAttribute('data-tab-id') === tabId;
+          const state = isActive ? 'active' : 'inactive';
+          el.setAttribute('data-state', state);
+          el.hidden = !isActive;
+        });
+      });
+    });
+  });
+</script>

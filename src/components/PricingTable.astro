@@ -1,0 +1,147 @@
+---
+import Button from './ui/Button.astro'
+import DeviceMockup from './ui/DeviceMockup.astro'
+import { Image } from 'astro:assets'
+import payments from '../assets/images/payments.webp'
+// PricingTable.astro
+// Tabela de preços inspirada no layout fornecido pelo usuário
+
+// Tipo para aceitar imagens importadas
+type ImageType = any
+
+interface Props {
+  sectionTitle?: string
+  title: string
+  oldPrice?: string
+  price: string
+  billingNote?: string
+  ctaText: string
+  ctaLink: string
+  ctaVariant?: string
+  features: string[]
+  bonuses?: string[]
+  imageUrl: ImageType
+  imageAlt: string
+  imageUrlMobile?: ImageType
+  imageAltMobile?: string
+  id?: string
+  sectionPadding?: string
+  gradientDirection?: string
+}
+
+const {
+  sectionTitle = 'Faça sua inscrição agora mesmo!',
+  title = 'Acesso ao curso completo',
+  price = 'R$ 19,90',
+  oldPrice = 'R$ 3.200,00',
+  billingNote = 'Por mês no pagamento anual.',
+  ctaText = 'COMECE AGORA MESMO',
+  ctaLink = '#',
+  ctaVariant = 'highlight',
+  sectionPadding = 'py-16 md:py-24',
+  gradientDirection = 'bg-gradient-to-tl',
+  id,
+  features = [
+    'Biblioteca de Conteúdos de Inspiração <strong>R$1.000,00</strong>',
+    'Tutoriais Exclusivos da Plataforma <strong>R$1.000,00</strong>',
+    'Ideias de Aplicação Prática <strong>R$500,00</strong>',
+  ],
+  bonuses = [
+    'Bônus 01: Destrave de 30 dias <strong>R$300,00</strong>',
+    'Bônus 02: Tráfego Estratégico com Natam Madeira <strong>R$300,00</strong>',
+    'Bônus 03: Checklist do Conteúdo Uau <strong>R$300,00</strong>',
+  ],
+  imageUrl = '',
+  imageAlt = 'Mockup do curso',
+  imageUrlMobile = '',
+  imageAltMobile = 'Mockup do curso mobile',
+} = Astro.props
+---
+
+<section
+  id={id || 'pricing'}
+  class={`${sectionPadding} ${gradientDirection} from-primary/10 via-white to-background`}
+>
+  <div
+    class="container mx-auto px-4 flex flex-col md:flex-row md:items-center md:justify-center gap-10 items-center"
+  >
+    <!-- Lista de benefícios -->
+    <div class="flex-1 max-w-xl w-full md:max-w-xl">
+      <h2
+        class="text-3xl md:text-3xl lg:text-4xl font-bold mb-6 text-gray-900 text-center md:text-left"
+      >
+        {sectionTitle}
+      </h2>
+      <ul class="space-y-4 mb-8">
+        {
+          features.map((item) => (
+            <li class="flex items-start gap-2 text-lg text-gray-800">
+              <span class="text-accent mt-1">✔️</span>
+              <span set:html={item} />
+            </li>
+          ))
+        }
+      </ul>
+      <ul class="space-y-2">
+        {
+          bonuses.map((item) => (
+            <li class="flex items-start gap-2 text-base text-gray-700">
+              <span class="text-highlight mt-1">★</span>
+              <span set:html={item} />
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+    <!-- Card de preço -->
+    <div class="flex-1 max-w-md w-full md:max-w-md">
+      <div
+        class="bg-white rounded-2xl shadow-2xl p-8 flex flex-col items-center relative"
+      >
+        <DeviceMockup
+          imageUrl={imageUrl}
+          imageAlt={imageAlt}
+          imageUrlMobile={imageUrlMobile}
+          imageAltMobile={imageAltMobile}
+          size="md"
+          class="mb-4"
+        />
+        <h3 class="text-xl font-bold text-gray-900 mb-2 text-center">
+          {title}
+        </h3>
+        <div class="mb-4 text-center">
+          <div class="text-sm text-gray-500 mb-1">Por apenas:</div>
+          <div class="flex flex-row items-center justify-center gap-2">
+            <span class="line-through text-gray-400 text-base opacity-70"
+              >{oldPrice}</span
+            >
+            <span class="font-bold text-[1.3em] text-green-600">{price}</span>
+          </div>
+          {
+            billingNote && (
+              <div class="text-xs text-gray-500 mt-1">{billingNote}</div>
+            )
+          }
+        </div>
+        <Button
+          as="a"
+          href={ctaLink}
+          variant={ctaVariant === 'highlight' ? 'accent' : (ctaVariant as any)}
+          size="lg"
+          rounded={false}
+          class={`w-full bg-${ctaVariant}`}
+        >
+          {ctaText}
+        </Button>
+        <div class="mt-6 flex items-center justify-center">
+          <Image
+            src={payments}
+            alt="Formas de pagamento: Visa, Mastercard, Elo, Pix, Mercado Pago"
+            class="block max-h-6 md:max-h-8 opacity-80"
+            loading="lazy"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
