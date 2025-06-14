@@ -1,6 +1,6 @@
 {
   "name": "@rgiraon/astro-landing-components",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Reusable Astro components for landing pages and minicourses",
   "type": "module",
   "main": "./dist/index.js",
@@ -46,10 +46,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/conteudouau/astro-landing-components.git"
+    "url": "https://github.com/rafgirao/astro-landing-components.git"
   },
-  "homepage": "https://github.com/conteudouau/astro-landing-components#readme",
+  "homepage": "https://github.com/rafgirao/astro-landing-components#readme",
   "bugs": {
-    "url": "https://github.com/conteudouau/astro-landing-components/issues"
+    "url": "https://github.com/rafgirao/astro-landing-components/issues"
   }
 }
