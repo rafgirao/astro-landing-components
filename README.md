@@ -1,11 +1,11 @@
-# @conteudouau/astro-landing-components
+# @rgiraon/astro-landing-components
 
 Reusable Astro components for creating beautiful landing pages and minicourse pages.
 
 ## Installation
 
 ```bash
-npm install @conteudouau/astro-landing-components
+npm install @rgiraon/astro-landing-components
 ```
 
 ## Quick Start
@@ -16,9 +16,9 @@ npm install @conteudouau/astro-landing-components
 
 ```astro
 ---
-import Hero from '@conteudouau/astro-landing-components/components/Hero.astro';
-import ProblemSolution from '@conteudouau/astro-landing-components/components/ProblemSolution.astro';
-import type { TestimonialItem } from '@conteudouau/astro-landing-components';
+import Hero from '@rgiraon/astro-landing-components/components/Hero.astro';
+import ProblemSolution from '@rgiraon/astro-landing-components/components/ProblemSolution.astro';
+import type { TestimonialItem } from '@rgiraon/astro-landing-components';
 ---
 
 <Hero
@@ -75,7 +75,7 @@ import type {
   FaqItem,
   ProblemSolutionItem,
   KeyBenefitItem 
-} from '@conteudouau/astro-landing-components';
+} from '@rgiraon/astro-landing-components';
 ```
 
 ## Component Examples
@@ -152,7 +152,7 @@ The package includes sample images and assets in the `assets/` directory that yo
 
 ## GitHub Repository
 
-[https://github.com/conteudouau/astro-landing-components](https://github.com/conteudouau/astro-landing-components)
+[https://github.com/rgiraon/astro-landing-components](https://github.com/rgiraon/astro-landing-components)
 
 ## Contributing
 
