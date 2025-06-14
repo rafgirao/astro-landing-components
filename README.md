@@ -8,61 +8,51 @@ Reusable Astro components for creating beautiful landing pages and minicourse pa
 npm install @conteudouau/astro-landing-components
 ```
 
-## Usage
+## Quick Start
 
-Import the components you need in your Astro project:
+1. Install the package in your Astro project
+2. Import the components you need
+3. Use them in your `.astro` files
 
 ```astro
 ---
-import { 
-  Hero, 
-  ProblemSolution, 
-  KeyBenefits, 
-  CourseContent,
-  Testimonials,
-  PricingTable,
-  Guarantee,
-  Instructor,
-  Faq
-} from '@conteudouau/astro-landing-components';
+import Hero from '@conteudouau/astro-landing-components/components/Hero.astro';
+import ProblemSolution from '@conteudouau/astro-landing-components/components/ProblemSolution.astro';
+import type { TestimonialItem } from '@conteudouau/astro-landing-components';
 ---
 
 <Hero
-  headline="Your Amazing Course"
-  subheadline="Learn something incredible"
-  ctaText="Get Started"
+  headline="<span class='text-highlight font-bold'>Minicurso</span><br>Seu Curso Incrível"
+  subheadline="Aprenda algo incrível por apenas R$ 29,90"
+  ctaText="QUERO COMEÇAR AGORA!"
   ctaLink="#pricing"
 />
-
-<ProblemSolution
-  problemTitle="Struggling with..."
-  solutionTitle="Imagine if you could..."
-  problemItems={['Problem 1', 'Problem 2']}
-  solutionItems={['Solution 1', 'Solution 2']}
-/>
-
-<!-- More components... -->
 ```
+
+## Requirements
+
+- **Astro 4.0+**
+- **Tailwind CSS** (components use Tailwind classes)
 
 ## Available Components
 
 ### Main Landing Page Components
 - **Hero** - Hero section with headline, media, and CTA
-- **ProblemSolution** - Problem/solution presentation
-- **KeyBenefits** - Key benefits showcase
-- **CourseContent** - Course modules and lessons
+- **ProblemSolution** - Problem/solution presentation with icons
+- **KeyBenefits** - Key benefits showcase grid
+- **CourseContent** - Course modules and lessons accordion
 - **Testimonials** - Customer testimonials carousel
 - **PricingTable** - Pricing and features table
 - **Guarantee** - Money-back guarantee section
 - **Instructor** - Instructor bio and credentials
-- **Faq** - Frequently asked questions
+- **Faq** - Frequently asked questions accordion
 
 ### UI Components
 - **TestimonialCard** - Individual testimonial card
 - **LessonAccordion** - Expandable lesson content
 - **FeatureItem** - Feature list item
-- **Features** - Features grid
-- **Showcase** - Content showcase
+- **Features** - Features grid layout
+- **Showcase** - Content showcase section
 
 ### Layout Components
 - **Header** - Site header with navigation
@@ -74,22 +64,100 @@ import {
 - **ImageEmbed** - Responsive image embed
 - **PandaEmbed** - Panda video player embed
 
-## Component Props
+## TypeScript Support
 
-Each component accepts various props for customization. Check the TypeScript definitions for detailed prop interfaces.
+The package includes TypeScript interfaces for all component props:
+
+```typescript
+import type { 
+  TestimonialItem, 
+  ModuleItem, 
+  FaqItem,
+  ProblemSolutionItem,
+  KeyBenefitItem 
+} from '@conteudouau/astro-landing-components';
+```
+
+## Component Examples
+
+### Hero Component
+```astro
+<Hero
+  headline="Your Amazing Course"
+  subheadline="Learn something incredible"
+  mediaType="youtube"
+  mediaUrl="https://www.youtube.com/watch?v=VIDEO_ID"
+  ctaText="Get Started"
+  ctaLink="#pricing"
+  layout="media-right"
+  bgColor="bg-gray-900"
+  textColor="text-white"
+/>
+```
+
+### Problem/Solution Component
+```astro
+<ProblemSolution
+  problemTitle="Struggling with..."
+  solutionTitle="Imagine if you could..."
+  problemItems={[
+    { text: "Problem 1", icon: "❌" },
+    { text: "Problem 2", icon: "😰" }
+  ]}
+  solutionItems={[
+    { text: "Solution 1", icon: "✅" },
+    { text: "Solution 2", icon: "🚀" }
+  ]}
+  ctaText="GET THE SOLUTION!"
+  ctaDescription="Transform your reality today"
+/>
+```
+
+### FAQ Component
+```astro
+---
+const faqItems = [
+  {
+    question: "How does the course work?",
+    answer: "The course is 100% online and you can watch at your own pace."
+  },
+  {
+    question: "Is there a guarantee?",
+    answer: "Yes! We offer a 7-day money-back guarantee."
+  }
+];
+---
+
+<Faq
+  title="Frequently Asked Questions"
+  items={faqItems}
+/>
+```
 
 ## Styling
 
-The components come with built-in Tailwind CSS classes. Make sure your project has Tailwind CSS configured.
+The components come with built-in **Tailwind CSS** classes. Make sure your Astro project has Tailwind CSS configured:
 
-## Examples
+```bash
+npx astro add tailwind
+```
 
-Check out the [examples directory](./examples) for complete page implementations.
+## Complete Example
+
+Check the [`examples/basic-usage.astro`](./examples/basic-usage.astro) file for a complete landing page implementation.
+
+## Assets
+
+The package includes sample images and assets in the `assets/` directory that you can reference or replace with your own.
+
+## GitHub Repository
+
+[https://github.com/conteudouau/astro-landing-components](https://github.com/conteudouau/astro-landing-components)
 
 ## Contributing
 
-Contributions are welcome! Please read our contributing guidelines.
+Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 
-MIT
+MIT License - feel free to use in your projects!

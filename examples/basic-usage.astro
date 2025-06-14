@@ -1,0 +1,145 @@
+---
+// Example of how to use the components in your Astro project
+import Hero from '@conteudouau/astro-landing-components/components/Hero.astro';
+import ProblemSolution from '@conteudouau/astro-landing-components/components/ProblemSolution.astro';
+import KeyBenefits from '@conteudouau/astro-landing-components/components/KeyBenefits.astro';
+import CourseContent from '@conteudouau/astro-landing-components/components/CourseContent.astro';
+import Testimonials from '@conteudouau/astro-landing-components/components/Testimonials.astro';
+import PricingTable from '@conteudouau/astro-landing-components/components/PricingTable.astro';
+import Guarantee from '@conteudouau/astro-landing-components/components/Guarantee.astro';
+import Instructor from '@conteudouau/astro-landing-components/components/Instructor.astro';
+import Faq from '@conteudouau/astro-landing-components/components/Faq.astro';
+
+// Import types for TypeScript support
+import type { TestimonialItem, ModuleItem, FaqItem } from '@conteudouau/astro-landing-components';
+
+// Sample data
+const testimonials: TestimonialItem[] = [
+  {
+    name: "João Silva",
+    role: "Designer",
+    content: "Transformou completamente minha forma de trabalhar!",
+    mediaType: "image",
+    mediaUrl: "/path/to/image.jpg"
+  }
+];
+
+const modules: ModuleItem[] = [
+  {
+    title: "Módulo 1: Fundamentos",
+    lessons: [
+      {
+        title: "Introdução aos Cenários",
+        description: "Aprenda os conceitos básicos",
+        duration: "15 min",
+        format: "Vídeo"
+      }
+    ]
+  }
+];
+
+const faqItems: FaqItem[] = [
+  {
+    question: "Como funciona o curso?",
+    answer: "O curso é 100% online e você pode assistir no seu ritmo."
+  }
+];
+---
+
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Meu Minicurso</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+  <Hero
+    headline="<span class='text-highlight font-bold'>Minicurso</span><br>Seu Curso Incrível"
+    subheadline="Aprenda algo incrível por apenas R$ 29,90"
+    mediaType="youtube"
+    mediaUrl="https://www.youtube.com/watch?v=VIDEO_ID"
+    ctaText="QUERO COMEÇAR AGORA!"
+    ctaLink="#pricing"
+    layout="media-right"
+    bgColor="bg-gray-900"
+    textColor="text-white"
+  />
+
+  <ProblemSolution
+    problemTitle="Você já se sentiu assim?"
+    solutionTitle="Imagine se você pudesse..."
+    problemItems={[
+      { text: "Problema 1", icon: "❌" },
+      { text: "Problema 2", icon: "😰" }
+    ]}
+    solutionItems={[
+      { text: "Solução 1", icon: "✅" },
+      { text: "Solução 2", icon: "🚀" }
+    ]}
+    ctaText="QUERO A SOLUÇÃO!"
+    ctaDescription="Transforme sua realidade hoje mesmo"
+  />
+
+  <KeyBenefits
+    title="O que você vai conseguir"
+    benefits={[
+      {
+        title: "Benefício 1",
+        description: "Descrição do benefício",
+        icon: "🎯"
+      }
+    ]}
+  />
+
+  <CourseContent
+    title="Conteúdo do Curso"
+    modules={modules}
+  />
+
+  <Testimonials
+    title="O que nossos alunos dizem"
+    testimonials={testimonials}
+  />
+
+  <PricingTable
+    title="Oferta Especial"
+    originalPrice="R$ 100,00"
+    currentPrice="R$ 29,90"
+    installments="ou em 12x de R$ 3,10"
+    features={[
+      "Acesso vitalício",
+      "Certificado de conclusão",
+      "Suporte por WhatsApp"
+    ]}
+    ctaText="GARANTIR MINHA VAGA"
+    paymentLink="https://pay.hotmart.com/SEU_LINK"
+  />
+
+  <Guarantee
+    title="Garantia de 7 Dias"
+    description="Se não ficar satisfeito, devolvemos 100% do seu dinheiro"
+    features={[
+      "Sem perguntas",
+      "Reembolso total",
+      "Até 7 dias"
+    ]}
+  />
+
+  <Instructor
+    name="Seu Nome"
+    role="Especialista em IA"
+    bio="Sua biografia aqui..."
+    imageUrl="/path/to/your/image.jpg"
+    credentials={[
+      "Credencial 1",
+      "Credencial 2"
+    ]}
+  />
+
+  <Faq
+    title="Perguntas Frequentes"
+    items={faqItems}
+  />
+</body>
+</html>
