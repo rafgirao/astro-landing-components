@@ -1,0 +1,46 @@
+/* Estilos para os containers de vídeo que se adaptam automaticamente */
+
+/* Estilo padrão para o container de vídeo Panda */
+.panda-embed-container {
+  position: relative;
+  padding-top: 56.25%; /* Proporção 16:9 (padrão para landscape) */
+  width: 100%;
+  height: 0;
+  overflow: hidden;
+  transition: padding-top 0.3s ease;
+}
+
+/* Quando a orientação é explicitamente definida como portrait */
+.panda-embed-container[data-orientation="portrait"] {
+  padding-top: 177.78%; /* Proporção 9:16 */
+}
+
+/* Quando a orientação é explicitamente definida como landscape */
+.panda-embed-container[data-orientation="landscape"] {
+  padding-top: 56.25%; /* Proporção 16:9 */
+}
+
+/* Estilos para outros tipos de embed de vídeo */
+.video-embed-container {
+  position: relative;
+  width: 100%;
+  height: 0;
+  overflow: hidden;
+  padding-top: 56.25%; /* Padrão 16:9 */
+  transition: padding-top 0.3s ease;
+}
+
+.video-embed-container.portrait {
+  padding-top: 177.78%; /* Proporção 9:16 */
+}
+
+/* Garantir que o iframe ocupe todo o espaço */
+.video-embed-container iframe,
+.panda-embed-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
